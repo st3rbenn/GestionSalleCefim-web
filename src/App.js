@@ -1,23 +1,18 @@
-import { Button } from "@mantine/core";
+// App.js
+import React from "react";
+import { Grid, Col, Box } from "@mantine/core";
+import WeekView from "./component/calendar/WeekView";
+import PromoList from "./component/calendar/PromoList";
+import Scheduler from "./component/calendar/Scheduler";
 
 function App() {
-  return (
-    <div>
-      <header>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const date = new Date();
+
+	return (
+		<Box>
+      <Scheduler date={date} promos={["CDA", "Dev Web", "Design", "Marketing"]} />
+		</Box>
+	);
 }
 
 export default App;
