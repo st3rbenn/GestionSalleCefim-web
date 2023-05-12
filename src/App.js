@@ -1,17 +1,16 @@
 // App.js
 import React from "react";
-import { Grid, Col, Box } from "@mantine/core";
-import WeekView from "./component/calendar/WeekView";
-import PromoList from "./component/calendar/PromoList";
-import Scheduler from "./component/calendar/Scheduler";
+import ScheduleTable from "./component/calendar/ScheduleTable";
+import { Flex } from "@mantine/core";
 
 function App() {
-	const date = new Date();
+	const date = new Date(); // La date à partir de laquelle afficher la semaine
+	const promos = ["CDA", "Dev Web", "Design", "Marketing"]; // Remplacez par vos promotions
 
 	return (
-		<Box>
-      <Scheduler date={date} promos={["CDA", "Dev Web", "Design", "Marketing"]} />
-		</Box>
+		<Flex>
+			<ScheduleTable />
+		</Flex>
 	);
 }
 
