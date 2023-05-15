@@ -5,13 +5,17 @@ import { MantineProvider } from "@mantine/core";
 import Scheduler from "./component/calendar/ScheduleTable";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<React.StrictMode>
 		<MantineProvider withGlobalStyles withNormalizeCSS>
 			<DndProvider backend={HTML5Backend}>
-				<Scheduler />
+				<Provider store={store}>
+					<App />
+				</Provider>
 			</DndProvider>
 		</MantineProvider>
 	</React.StrictMode>
