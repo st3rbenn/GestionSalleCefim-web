@@ -1,6 +1,11 @@
-// App.js
 import React, { useEffect } from "react";
-import { Flex } from "@mantine/core";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route, createBrowserRouter } from "react-router-dom";
+import { NavbarMinimal } from "./view/Dashboard";
+import Reservations from "./view/Reservations";
+import Rooms from "./view/Rooms";
+import Trainers from "./view/Trainers";
+import { Box, Flex } from "@mantine/core";
 import { useAppThunkDispatch } from "./store";
 import { editUser, getAllCampuses, getAllUser } from "./store/mainslice";
 import Scheduler from "./component/calendar/ScheduleTable";
@@ -34,10 +39,22 @@ function App() {
 	/* FIN DU CODE */
 
 	return (
-		<Flex>
-			<Scheduler />
-		</Flex>
+		<Box style={{
+			display: "flex",
+			margin: "10px",
+		}}>
+			<NavbarMinimal />
+			<Routes>
+				<Route path="/" element={<Scheduler />} index />
+				<Route path="/admin/formateurs" element={<Trainers />} />
+				<Route path="/admin/reservations" element={<Reservations />} />
+				<Route path="/admin/salles" element={<Rooms />} />
+			</Routes>
+		</Box>
 	);
 }
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
 
 export default App;
