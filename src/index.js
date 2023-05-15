@@ -1,18 +1,21 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
+import ReactDOM from "react-dom";
+import { BrowserRouter, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
+import App from "./App";
 import Scheduler from "./component/calendar/ScheduleTable";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
+ReactDOM.render(
 	<React.StrictMode>
 		<MantineProvider withGlobalStyles withNormalizeCSS>
-			<DndProvider backend={HTML5Backend}>
-				<Scheduler />
-			</DndProvider>
+      <BrowserRouter>
+        <DndProvider backend={HTML5Backend}>
+            <App />
+         </DndProvider>
+       </BrowserRouter>
 		</MantineProvider>
-	</React.StrictMode>
+	</React.StrictMode>,
+	document.getElementById("root")
 );
