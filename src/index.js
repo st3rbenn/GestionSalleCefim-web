@@ -1,13 +1,19 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
+import ReactDOM from "react-dom";
+// import App from "./App";
+// import { MantineProvider } from "@mantine/core";
+import { BrowserRouter, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
+import App from "./App";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
+
+ReactDOM.render(
 	<React.StrictMode>
 		<MantineProvider withGlobalStyles withNormalizeCSS>
-			<App />
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
 		</MantineProvider>
-	</React.StrictMode>
+	</React.StrictMode>,
+	document.getElementById("root")
 );

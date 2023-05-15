@@ -1,18 +1,33 @@
 // App.js
 import React from "react";
-import { Grid, Col, Box } from "@mantine/core";
-import WeekView from "./component/calendar/WeekView";
-import PromoList from "./component/calendar/PromoList";
-import Scheduler from "./component/calendar/Scheduler";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route, createBrowserRouter } from "react-router-dom";
+import { NavbarMinimal } from "./view/Dashboard";
+import Reservations from "./view/Reservations";
+import Rooms from "./view/Rooms";
+import Trainers from "./view/Trainers";
+import { Box, Flex } from "@mantine/core";
 
 function App() {
 	const date = new Date();
 
 	return (
-		<Box>
-      <Scheduler date={date} promos={["CDA", "Dev Web", "Design", "Marketing"]} />
+		<Box style={{
+			display: "flex",
+			margin: "10px",
+		}}>
+			<NavbarMinimal />
+			<Routes>
+				<Route path="/" element={< Flex> Home</Flex>} index />
+				<Route path="/formateurs" element={<Trainers />} />
+				<Route path="/reservations" element={<Reservations />} />
+				<Route path="/salles" element={<Rooms />} />
+			</Routes>
 		</Box>
 	);
 }
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
 
 export default App;
