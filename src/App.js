@@ -9,7 +9,8 @@ import Trainers from "./view/Trainers";
 import { Box, Flex } from "@mantine/core";
 
 function App() {
-	const date = new Date();
+	const date = new Date(); // La date à partir de laquelle afficher la semaine
+	const promos = ["CDA", "Dev Web", "Design", "Marketing"]; // Remplacez par vos promotions
 
 	return (
 		<Box style={{
