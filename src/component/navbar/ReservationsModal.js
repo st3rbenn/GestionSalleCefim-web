@@ -17,9 +17,6 @@ function EditReservationModal({ isOpen, onClose }) {
           overlay: {
             backgroundColor: 'rgba(128, 128, 128, 0.1)',
           },
-          // modal: {
-          //   height: '700px', // Définir la hauteur de la modal ici
-          // },
         }}>
         <Box>
           <Select

@@ -11,9 +11,9 @@ import NavbarLink from '../component/navbar/NavbarLink';
 
 const mockdata = [
   { icon: IconHome2, label: 'Home', path: '/' },
-  { icon: MdPerson, label: 'Formateurs', path: '/formateurs' },
-  { icon: MdMeetingRoom, label: 'Salles', path: '/salles' },
-  { icon: RiCalendarEventLine, label: 'Reservations', path: '/reservations' },
+  { icon: MdPerson, label: 'Formateurs', path: '/admin/formateurs' },
+  { icon: MdMeetingRoom, label: 'Salles', path: '/admin/salles' },
+  { icon: RiCalendarEventLine, label: 'Reservations', path: '/admin/reservations' },
 ];
 
 export function NavbarMinimal() {

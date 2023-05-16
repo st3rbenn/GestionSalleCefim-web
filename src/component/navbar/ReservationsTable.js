@@ -1,8 +1,10 @@
-import { useState } from 'react';
-import { createStyles, Table, ScrollArea, UnstyledButton, Group, Text, Center, TextInput, rem, Menu, ActionIcon, Modal } from '@mantine/core';
-import { keys } from '@mantine/utils';
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconTrash, IconDots, IconEdit } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
+import { createStyles, Table, ScrollArea, Group, Text, Center, rem, Menu, ActionIcon, } from '@mantine/core';
+import { IconSelector, IconChevronDown, IconChevronUp, IconTrash, IconDots, IconEdit } from '@tabler/icons-react';
 import EditReservationModal from './ReservationsModal';
+import { useAppThunkDispatch } from '../../store';
+import { useSelector } from 'react-redux';
+import { deleteReservation, getAllReservation } from '../../store/mainslice';
 
 
 const useStyles = createStyles((theme) => ({
@@ -27,89 +29,64 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-function Th({ children, reversed, sorted, onSort }) {
+function Th({ children, reversed, sorted }) {
     const { classes } = useStyles();
     const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
     return (
         <th className={classes.th}>
-            <UnstyledButton onClick={onSort} className={classes.control}>
-                <Group position="apart">
-                    <Text fw={500} fz="sm">
-                        {children}
-                    </Text>
-                    <Center className={classes.icon}>
-                        <Icon size="0.9rem" stroke={1.5} />
-                    </Center>
-                </Group>
-            </UnstyledButton>
+            <Group position="apart">
+                <Text fw={500} fz="sm">
+                    {children}
+                </Text>
+                <Center className={classes.icon}>
+                    <Icon size="0.9rem" stroke={1.5} />
+                </Center>
+            </Group>
         </th>
     );
 }
 
-function filterData(data, search) {
-    const query = search.toLowerCase().trim();
-    return data.filter((item) =>
-        keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
-    );
-}
-
-function sortData(data, payload) {
-    const { sortBy } = payload;
-
-    if (!sortBy) {
-        return filterData(data, payload.search);
-    }
-
-    return filterData(
-        [...data].sort((a, b) => {
-            if (payload.reversed) {
-                return b[sortBy].localeCompare(a[sortBy]);
-            }
-
-            return a[sortBy].localeCompare(b[sortBy]);
-        }),
-        payload.search
-    );
-}
-
 export function ReservationTable({ data }) {
-    const [search, setSearch] = useState('');
-    const [sortedData, setSortedData] = useState(data);
-    const [sortBy, setSortBy] = useState(null);
-    const [reverseSortDirection, setReverseSortDirection] = useState(false);
-
-
-    const setSorting = (field) => {
-        const reversed = field === sortBy ? !reverseSortDirection : false;
-        setReverseSortDirection(reversed);
-        setSortBy(field);
-        setSortedData(sortData(data, { sortBy: field, reversed, search }));
-    };
-
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleCloseModal = () => {
         setIsModalOpen(!isModalOpen);
     };
+    const dispatch = useAppThunkDispatch();
 
     const handleEditReservation = () => {
         setIsModalOpen(true);
         // Autres actions à effectuer lors de l'édition d'une réservation
     };
 
-    const handleSearchChange = (event) => {
-        const { value } = event.currentTarget;
-        setSearch(value);
-        setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
+    const handleDelete = async (reservationId) => {
+        const response = await dispatch(deleteReservation(reservationId));
+        console.log('delete est passée');
     };
+
+    const allReservations = useSelector((state) => state.reservations);
+
+    const fetchReservations = async () => {
+        const response = await dispatch(getAllReservation());
+
+        if (response.meta.requestStatus === "fulfilled") {
+            console.log(allReservations);
+        }
+    }
+
+    useEffect(() => {
+        fetchReservations();
+    }, [])
+
+    const [sortedData] = useState(allReservations);
 
     const rows = sortedData.map((row) => (
         <>
             <tr key={row.name}>
-                <td>{row.debut}</td>
-                <td>{row.fin}</td>
-                <td>{row.durée}</td>
-                <td>{row.nb_etudients}</td>
+                <td>{row.title}</td>
+                <td>{row.description}</td>
+                <td>{row.startDate}</td>
+                <td>{row.endDate}</td>
                 <td>
                     <Group spacing={0} position="right">
                         <Menu
@@ -125,59 +102,25 @@ export function ReservationTable({ data }) {
                             </Menu.Target>
                             <Menu.Dropdown>
                                 <Menu.Item icon={<IconEdit size="1rem" stroke={1.5} />} onClick={handleEditReservation}>Modifier</Menu.Item>
-                                <Menu.Item icon={<IconTrash size="1rem" stroke={1.5} />} color="red">Supprimer</Menu.Item>
+                                <Menu.Item icon={<IconTrash size="1rem" stroke={1.5} />} onClick={() => handleDelete(handleDelete(row.id))} color="red">Supprimer</Menu.Item>
                             </Menu.Dropdown>
                         </Menu>
                     </Group>
                 </td>
             </tr>
-
-
             <EditReservationModal isOpen={isModalOpen} onClose={handleCloseModal} />
-
         </>
     ));
 
     return (
         <ScrollArea >
-            <TextInput
-                placeholder="Rechercher par champ"
-                mb="md"
-                icon={<IconSearch size="0.9rem" stroke={1.5} />}
-                value={search}
-                onChange={handleSearchChange}
-            />
             <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} sx={{ tableLayout: 'fixed' }}>
                 <thead>
                     <tr>
-                        <Th
-                            sorted={sortBy === 'debut'}
-                            reversed={reverseSortDirection}
-                            onSort={() => setSorting('debut')}
-                        >
-                            Début
-                        </Th>
-                        <Th
-                            sorted={sortBy === 'fin'}
-                            reversed={reverseSortDirection}
-                            onSort={() => setSorting('fin')}
-                        >
-                            Fin
-                        </Th>
-                        <Th
-                            sorted={sortBy === 'durée'}
-                            reversed={reverseSortDirection}
-                            onSort={() => setSorting('durée')}
-                        >
-                            Durée
-                        </Th>
-                        <Th
-                            sorted={sortBy === 'nb_etudients'}
-                            reversed={reverseSortDirection}
-                            onSort={() => setSorting('nb_etudients')}
-                        >
-                            Nombre d'étudiants
-                        </Th>
+                        <Th>Titre</Th>
+                        <Th>Description</Th>
+                        <Th>Début</Th>
+                        <Th>Fin</Th>
                     </tr>
                 </thead>
                 <tbody>
