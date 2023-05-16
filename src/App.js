@@ -6,7 +6,7 @@ import Reservations from "./view/Reservations";
 import Rooms from "./view/Rooms";
 import Trainers from "./view/Trainers";
 import { Box } from "@mantine/core";
-import Scheduler from "./component/calendar/ScheduleTable";
+import Scheduler from "./component/calendar/SchedulerCalendar";
 
 function App() {
 	return (
