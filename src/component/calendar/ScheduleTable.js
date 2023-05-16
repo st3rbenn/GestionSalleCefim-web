@@ -1,52 +1,136 @@
-import React, { useState } from "react";
-import {
-	Table,
-	Button,
-	Col,
-	Grid,
-	Paper,
-	Flex,
-	Text,
-	Popover,
-	Container,
-	Card,
-} from "@mantine/core";
+import React, { useEffect, useState } from "react";
+import { Table, Button, Col, Grid, Paper, Flex, Text } from "@mantine/core";
+import { useAppThunkDispatch } from "../../store";
+import { getAllCampuses } from "../../store/mainslice";
+import { useSelector } from "react-redux";
+import moment from "moment";
+
+// const promotions = [
+// 	{
+// 		room: "Salle Arobase",
+// 		promo: [
+// 			{
+// 				name: "Dev Web",
+// 			},
+// 			{
+// 				name: "Design",
+// 			},
+// 		],
+// 	},
+// 	{
+// 		room: "Salle Cookie",
+// 		promo: [
+// 			{
+// 				name: "Dev Web",
+// 			},
+// 			{
+// 				name: "Design",
+// 			},
+// 		],
+// 	},
+// 	{
+// 		room: "Salle Hashtag",
+// 		promo: [
+// 			{
+// 				name: "Dev Web",
+// 			},
+// 			{
+// 				name: "Design",
+// 			},
+// 		],
+// 	},
+// ];
 
 const promotions = [
 	{
-		room: "Salle Arobase",
-		promo: [
+		building: "CEFIM",
+		rooms: [
 			{
-				name: "Dev Web",
+				name: "Salle Cookie",
+				promotion: [
+					{
+						name: "Promo 1",
+						events: [
+							{
+								id: 1,
+								name: "Event 1",
+								date: "2023-05-20",
+								time: "Matin",
+								color: "red",
+							},
+						],
+					},
+				],
 			},
 			{
-				name: "Design",
+				name: "Salle Hashtag",
+				promotion: [
+					{
+						name: "Promo 2",
+						events: [
+							{
+								id: 2,
+								name: "Event 2",
+								date: "2023-05-21",
+								time: "Après-midi",
+								color: "blue",
+							},
+							{
+								id: 2,
+								name: "Event 3",
+								date: "2023-05-21",
+								time: "Matin",
+								color: "cyan",
+							},
+						],
+					},
+				],
 			},
 		],
 	},
 	{
-		room: "Salle Cookie",
-		promo: [
+		building: "MAME",
+		rooms: [
 			{
-				name: "Dev Web",
-			},
-			{
-				name: "Design",
-			},
-		],
-	},
-	{
-		room: "Salle Hashtag",
-		promo: [
-			{
-				name: "Dev Web",
-			},
-			{
-				name: "Design",
+				name: "Salle Roberta Williams",
+				promotion: [
+					{
+						name: "Promo 3",
+						events: [
+							{
+								id: 3,
+								name: "Event 3",
+								date: "2023-05-22",
+								time: "Matin",
+							},
+							// d'autres événements
+						],
+					},
+					// d'autres promotions
+				],
 			},
 		],
 	},
 ];
+
+// À l'extérieur de votre composant de rendu, préparez les données :
+const allEvents = promotions.reduce((acc, { rooms }) => {
+	const roomEvents = rooms.reduce((roomAcc, { promotion }) => {
+		const promotionEvents = promotion.reduce((promoAcc, { events }) => {
+			return [...promoAcc, ...events];
+		}, []);
+		return [...roomAcc, ...promotionEvents];
+	}, []);
+	return [...acc, ...roomEvents];
+}, []);
+
+// Trier par date et moment de la journée (Matin vient avant Après-midi)
+allEvents.sort((a, b) => {
+	if (a.date === b.date) {
+		return a.time === "Matin" ? -1 : 1;
+	}
+	return new Date(a.date) - new Date(b.date);
+});
 
 function getWeekDates(weekOffset) {
 	const dates = [];
@@ -75,15 +159,22 @@ function getDayDates(dayOffset) {
 const ScheduleTable = () => {
 	const [currentWeek, setCurrentWeek] = useState(0);
 	const weekDates = getWeekDates(currentWeek);
-	const dayDates = getDayDates(currentWeek);
 	const [viewMode, setViewMode] = useState("week");
-	const rooms = Array.from(new Set(promotions.map((promo) => promo.room)));
-	const promosByRoom = rooms.map((room) => ({
-		room,
-		promos: promotions.filter((promo) => promo.room === room),
-	}));
+	const dispatch = useAppThunkDispatch();
+	const allCampuses = useSelector((state) => state.campuses);
 
 	const [openRooms, setOpenRooms] = useState({});
+
+	const getAllCampus = async () => {
+		const response = await dispatch(getAllCampuses());
+		if (response.meta.requestStatus === "fulfilled") {
+			console.log(allCampuses);
+		}
+	};
+
+	useEffect(() => {
+		getAllCampus();
+	}, []);
 
 	const previousWeek = () => {
 		setCurrentWeek(currentWeek - 1);
@@ -92,6 +183,19 @@ const ScheduleTable = () => {
 	const nextWeek = () => {
 		setCurrentWeek(currentWeek + 1);
 	};
+
+	const handleSwitchView = (view) => {
+		setViewMode(view);
+		setOpenRooms({});
+
+		if (view === "day") {
+			console.log("fetching campus");
+		}
+	};
+
+	useEffect(() => {
+		console.log(openRooms);
+	}, [openRooms]);
 
 	return (
 		<Paper
@@ -141,7 +245,7 @@ const ScheduleTable = () => {
 					}}
 				>
 					<Button
-						onClick={() => setViewMode("day")}
+						onClick={() => handleSwitchView("day")}
 						style={{
 							borderTopRightRadius: 0,
 							borderBottomRightRadius: 0,
@@ -151,135 +255,26 @@ const ScheduleTable = () => {
 						Day
 					</Button>
 					<Button
-						onClick={() => setViewMode("week")}
+						onClick={() => handleSwitchView("week")}
 						style={{
 							borderRadius: 0,
 						}}
 					>
 						Week
 					</Button>
-					<Button
-						onClick={() => setViewMode("month")}
+					{/* <Button
+						onClick={() => handleSwitchView("month")}
 						style={{
 							borderTopLeftRadius: 0,
 							borderBottomLeftRadius: 0,
 						}}
 					>
 						Month
-					</Button>
+					</Button> */}
 				</Grid.Col>
 			</Grid>
 
-			{viewMode === "day" && (
-				<Flex
-					sx={{
-						width: "100%", // make sure the container takes full width
-						overflowX: "auto", // enables horizontal scrolling
-						paddingLeft: 30,
-						paddingBottom: 30,
-					}}
-				>
-					<Table
-						style={{ border: "1px solid black", borderCollapse: "collapse" }}
-					>
-						<thead>
-							<tr>
-								<th style={{ border: "1px solid black" }}></th>
-								<th
-									colSpan="11"
-									style={{ border: "1px solid black", textAlign: "center" }}
-								>
-									{dayDates}
-								</th>
-							</tr>
-							<tr>
-								<th style={{ border: "1px solid black" }}></th>
-								{Array.from({ length: 10 }, (_, i) => i + 8).map((hour) => (
-									<th
-										key={hour}
-										style={{
-											border: "1px solid black",
-											textAlign: "center",
-											width: "10%",
-											fontSize: "0.6rem",
-											padding: 0,
-										}}
-									>
-										{hour}:00 - {hour + 1}:00
-									</th>
-								))}
-							</tr>
-						</thead>
-						<tbody
-							style={{
-								overflow: "scroll",
-							}}
-						>
-							{promosByRoom.map(({ room, promos }) => (
-								<>
-									<tr
-										onClick={() =>
-											setOpenRooms((prev) => ({ ...prev, [room]: !prev[room] }))
-										}
-									>
-										<td
-											style={{ border: "1px solid black", cursor: "pointer" }}
-										>
-											{room}
-										</td>
-										{weekDates.map(() => (
-											<>
-												<td
-													style={{
-														border: "1px solid black",
-														width: "10rem",
-														height: "5rem",
-													}}
-												></td>
-												<td
-													style={{
-														border: "1px solid black",
-														width: "10rem",
-														height: "5rem",
-													}}
-												></td>
-											</>
-										))}
-									</tr>
-									{openRooms[room] &&
-										promos.map((promo) => (
-											<tr key={promo.name}>
-												<td style={{ border: "1px solid black" }}>
-													{promo.name}
-												</td>
-												{weekDates.map(() => (
-													<>
-														<td
-															style={{
-																border: "1px solid black",
-																width: "10rem",
-																height: "5rem",
-															}}
-														></td>
-														<td
-															style={{
-																border: "1px solid black",
-																width: "10rem",
-																height: "5rem",
-															}}
-														></td>
-													</>
-												))}
-											</tr>
-										))}
-								</>
-							))}
-						</tbody>
-					</Table>
-				</Flex>
-			)}
-
-			{viewMode === "week" && (
+			{/* {viewMode === "day" && (
 				<Grid
 					gutter="xs"
 					style={{
@@ -293,55 +288,28 @@ const ScheduleTable = () => {
 							borderBottom: "1px solid black",
 							borderRight: "1px solid black",
 						}}
-					></Col>
-					{weekDates.map((date, index) => (
+					>
+						<Paper padding="xs" shadow="xs" style={{ textAlign: "center" }}>
+							{dayDates}
+						</Paper>
+					</Col>
+					{Array.from({ length: 10 }, (_, i) => i + 8).map((hour) => (
 						<Col
 							span={2}
-							key={index}
 							style={{
 								borderBottom: "1px solid black",
 								borderRight: "1px solid black",
-								textAlign: "center",
+								width: "10%",
+								fontSize: "0.6rem",
+								padding: 0,
 							}}
+							key={hour}
 						>
-							{date}
+							<Paper padding="xs" shadow="xs" style={{ textAlign: "center" }}>
+								{hour}:00 - {hour + 1}:00
+							</Paper>
 						</Col>
 					))}
-
-					<Col
-						span={2}
-						style={{
-							borderBottom: "1px solid black",
-							borderRight: "1px solid black",
-						}}
-					></Col>
-					{weekDates.map(() => (
-						<>
-							<Col
-								span={1}
-								style={{
-									borderBottom: "1px solid black",
-									borderRight: "1px solid black",
-									textAlign: "center",
-									fontSize: "0.6rem",
-								}}
-							>
-								Matin
-							</Col>
-							<Col
-								span={1}
-								style={{
-									borderBottom: "1px solid black",
-									borderRight: "1px solid black",
-									textAlign: "center",
-									fontSize: "0.6rem",
-								}}
-							>
-								Après-midi
-							</Col>
-						</>
-					))}
-
 					{promotions.map(({ room, promo }) => (
 						<>
 							<Col
@@ -352,15 +320,13 @@ const ScheduleTable = () => {
 									cursor: "pointer",
 								}}
 								onClick={() =>
-									setOpenRooms((prev) => ({
-										...prev,
-										[room]: !prev[room],
-									}))
+									setOpenRooms((prev) => ({ ...prev, [room]: !prev[room] }))
 								}
 							>
-								{room}
+								<Paper padding="xs" shadow="xs">
+									{room}
+								</Paper>
 							</Col>
-
 							{weekDates.map(() => (
 								<>
 									<Col
@@ -371,7 +337,7 @@ const ScheduleTable = () => {
 											width: "10rem",
 											height: "5rem",
 										}}
-									></Col>
+									/>
 									<Col
 										span={1}
 										style={{
@@ -380,7 +346,7 @@ const ScheduleTable = () => {
 											width: "10rem",
 											height: "5rem",
 										}}
-									></Col>
+									/>
 								</>
 							))}
 							{openRooms[room] &&
@@ -394,7 +360,9 @@ const ScheduleTable = () => {
 												paddingLeft: "2rem",
 											}}
 										>
-											{name}
+											<Paper padding="xs" shadow="xs">
+												{name}
+											</Paper>
 										</Col>
 										{weekDates.map(() => (
 											<>
@@ -406,7 +374,7 @@ const ScheduleTable = () => {
 														width: "10rem",
 														height: "5rem",
 													}}
-												></Col>
+												/>
 												<Col
 													span={1}
 													style={{
@@ -415,7 +383,7 @@ const ScheduleTable = () => {
 														width: "10rem",
 														height: "5rem",
 													}}
-												></Col>
+												/>
 											</>
 										))}
 									</>
@@ -423,13 +391,389 @@ const ScheduleTable = () => {
 						</>
 					))}
 				</Grid>
-			)}
-
-			{/* {viewMode === "month" && (
-				<div>
-					<h1>Month</h1>
-				</div>
 			)} */}
+
+			{viewMode === "week" && (
+				<Grid
+					gutter="xs"
+					style={{
+						borderTop: "1px solid black",
+						borderLeft: "1px solid black",
+					}}
+				>
+					<Col
+						id="empty-cell"
+						span={2}
+						style={{
+							borderBottom: "1px solid black",
+							borderRight: "1px solid black",
+							padding: 0,
+						}}
+					></Col>
+					{weekDates.map((date, index) => (
+						<Col
+							span={2}
+							key={index}
+							style={{
+								borderBottom: "1px solid black",
+								borderRight: "1px solid black",
+								textAlign: "center",
+								padding: 0,
+							}}
+						>
+							{date}
+						</Col>
+					))}
+
+					<Col
+						id="empty-cell"
+						span={2}
+						style={{
+							borderBottom: "1px solid black",
+							borderRight: "1px solid black",
+							padding: 0,
+						}}
+					></Col>
+					{weekDates.map(() => (
+						<>
+							<Col
+								span={1}
+								style={{
+									borderBottom: "1px solid black",
+									borderRight: "1px solid black",
+									textAlign: "center",
+									fontSize: "0.6rem",
+									padding: 0,
+								}}
+							>
+								Matin
+							</Col>
+							<Col
+								span={1}
+								style={{
+									borderBottom: "1px solid black",
+									borderRight: "1px solid black",
+									textAlign: "center",
+									fontSize: "0.6rem",
+									padding: 0,
+								}}
+							>
+								Après-midi
+							</Col>
+						</>
+					))}
+
+					{promotions.map(({ building, rooms }) => (
+						<>
+							<Col
+								span={2}
+								style={{
+									borderBottom: "1px solid black",
+									borderRight: "1px solid black",
+									cursor: "pointer",
+								}}
+								onClick={() =>
+									setOpenRooms((prev) => ({
+										...prev,
+										[building]: !prev[building],
+									}))
+								}
+							>
+								{building}
+							</Col>
+
+							{weekDates.map((weekDate) => (
+								<>
+									{openRooms !== undefined && openRooms[building] ? (
+										<>
+											<Col
+												span={1}
+												style={{
+													borderBottom: "1px solid black",
+													borderRight: "1px solid black",
+													width: "10rem",
+													height: "5rem",
+													padding: 0,
+												}}
+											></Col>
+											<Col
+												span={1}
+												style={{
+													borderBottom: "1px solid black",
+													borderRight: "1px solid black",
+													width: "10rem",
+													height: "5rem",
+													padding: 0,
+												}}
+											></Col>
+										</>
+									) : (
+										<>
+											<Col
+												span={1}
+												style={{
+													borderBottom: "1px solid black",
+													borderRight: "1px solid black",
+													width: "10rem",
+													height: "5rem",
+													padding: 0,
+												}}
+											>
+												{allEvents
+													.filter(({ date, time }) => {
+														const date1 = moment(date, "YYYY-MM-DD");
+														const date2 = moment(weekDate, "DD/MM/YYYY");
+														return (
+															date1.isSame(date2, "day") && time === "Matin"
+														);
+													})
+													.map(({ name, color }) => (
+														<Paper
+															padding="xs"
+															shadow="xs"
+															style={{
+																textAlign: "center",
+																backgroundColor: color,
+																borderRadius: 5,
+																margin: "0.2rem",
+																fontSize: "0.6rem",
+															}}
+														>
+															{name}
+														</Paper>
+													))}
+											</Col>
+											<Col
+												span={1}
+												style={{
+													borderBottom: "1px solid black",
+													borderRight: "1px solid black",
+													width: "10rem",
+													height: "5rem",
+													padding: 0,
+												}}
+											>
+												{allEvents
+													.filter(({ date, time }) => {
+														const date1 = moment(date, "YYYY-MM-DD");
+														const date2 = moment(weekDate, "DD/MM/YYYY");
+														return (
+															date1.isSame(date2, "day") &&
+															time === "Après-midi"
+														);
+													})
+													.map(({ name, color }) => (
+														<Paper
+															padding="xs"
+															shadow="xs"
+															style={{
+																textAlign: "center",
+																backgroundColor: color,
+																borderRadius: 5,
+																margin: "0.2rem",
+																fontSize: "0.6rem",
+															}}
+														>
+															{name}
+														</Paper>
+													))}
+											</Col>
+										</>
+									)}
+								</>
+							))}
+
+							{openRooms[building] &&
+								rooms.map(({ name, promotion }) => (
+									<>
+										<Col
+											span={2}
+											style={{
+												borderBottom: "1px solid black",
+												borderRight: "1px solid black",
+												paddingLeft: "2rem",
+											}}
+										>
+											{name}
+										</Col>
+										{weekDates.map((weekDate) => (
+											<>
+												<Col
+													span={1}
+													style={{
+														borderBottom: "1px solid black",
+														borderRight: "1px solid black",
+														width: "10rem",
+														height: "5rem",
+														padding: 0,
+													}}
+												>
+													{promotion &&
+														promotion.map(({ events }) =>
+															events.map(({ name, date, time, color }) => {
+																const date1 = moment(date, "YYYY-MM-DD");
+																const date2 = moment(weekDate, "DD/MM/YYYY");
+																return (
+																	date1.isSame(date2, "day") &&
+																	time === "Matin" && (
+																		<Paper
+																			padding="xs"
+																			shadow="xs"
+																			style={{
+																				textAlign: "center",
+																				backgroundColor: color,
+																				borderRadius: 5,
+																				margin: "0.2rem",
+																				fontSize: "0.6rem",
+																			}}
+																		>
+																			{name}
+																		</Paper>
+																	)
+																);
+															})
+														)}
+												</Col>
+												<Col
+													span={1}
+													style={{
+														borderBottom: "1px solid black",
+														borderRight: "1px solid black",
+														width: "10rem",
+														height: "5rem",
+														padding: 0,
+													}}
+												>
+													{promotion &&
+														promotion.map(({ events }) =>
+															events.map(({ name, date, time, color }) => {
+																const date1 = moment(date, "YYYY-MM-DD");
+																const date2 = moment(weekDate, "DD/MM/YYYY");
+																return (
+																	date1.isSame(date2, "day") &&
+																	time === "Après-midi" && (
+																		<Paper
+																			padding="xs"
+																			shadow="xs"
+																			style={{
+																				textAlign: "center",
+																				backgroundColor: color,
+																				borderRadius: 5,
+																				margin: "0.2rem",
+																				fontSize: "0.6rem",
+																			}}
+																		>
+																			{name}
+																		</Paper>
+																	)
+																);
+															})
+														)}
+												</Col>
+											</>
+										))}
+									</>
+								))}
+						</>
+					))}
+
+					{/* {viewMode === "week" && (
+						<Grid
+							gutter="xs"
+							style={{
+								borderTop: "1px solid black",
+								borderLeft: "1px solid black",
+							}}
+						>
+							{promotions.map(({ building, rooms }) => (
+								<>
+									{openRooms[building] &&
+										rooms.map(({ name, promotion }) => (
+											<>
+												{weekDates.map((weekDate) => (
+													<>
+														<Col
+															span={1}
+															style={{
+																borderBottom: "1px solid black",
+																borderRight: "1px solid black",
+																width: "10rem",
+																height: "5rem",
+																padding: 0,
+															}}
+														>
+															{promotion.map(({ events }) =>
+																events.map(({ name, date, time, color }) => {
+																	const date1 = new Date(
+																		date
+																	).toLocaleDateString();
+																	//change weekDate to french format so d/m/y
+																	const date2 = new Date(
+																		weekDate.split("/").reverse().join("-")
+																	).toLocaleDateString();
+																	console.log(
+																		date1 === date2 ? "true" : "false"
+																	);
+																	return (
+																		date1 === date2 &&
+																		time === "Matin" && (
+																			<Paper
+																				padding="xs"
+																				shadow="xs"
+																				style={{
+																					textAlign: "center",
+																					backgroundColor: color,
+																					borderRadius: 0,
+																					fontSize: "0.6rem",
+																				}}
+																			>
+																				{name}
+																			</Paper>
+																		)
+																	);
+																})
+															)}
+														</Col>
+														<Col
+															span={1}
+															style={{
+																borderBottom: "1px solid black",
+																borderRight: "1px solid black",
+																width: "10rem",
+																height: "5rem",
+																padding: 0,
+															}}
+														>
+															{promotion.map(({ events }) =>
+																events.map(
+																	({ name, date, time, color }) =>
+																		time === "Après-midi" && (
+																			<Paper
+																				padding="xs"
+																				shadow="xs"
+																				style={{
+																					textAlign: "center",
+																					backgroundColor: color,
+																					borderRadius: 0,
+																					fontSize: "0.6rem",
+																				}}
+																			>
+																				{name}
+																			</Paper>
+																		)
+																)
+															)}
+														</Col>
+													</>
+												))}
+											</>
+										))}
+								</>
+							))}
+						</Grid>
+					)} */}
+				</Grid>
+			)}
 		</Paper>
 	);
 };
