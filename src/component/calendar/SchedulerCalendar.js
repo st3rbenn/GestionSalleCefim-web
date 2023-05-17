@@ -18,10 +18,10 @@ const allEventsWeek = promotions.reduce((acc, { rooms, building }) => {
 		}, []);
 		return [...roomAcc, ...promotionEvents];
 	}, []);
-  //add building name to each event
-  roomEvents.forEach((event) => {
-    event.building = building;
-  })
+	//add building name to each event
+	roomEvents.forEach((event) => {
+		event.building = building;
+	});
 	return [...acc, ...roomEvents];
 }, []);
 
@@ -34,38 +34,38 @@ allEventsWeek.sort((a, b) => {
 });
 
 const allEventsDay = promotions.reduce((acc, { rooms, building }) => {
-  const roomEvents = rooms.reduce((roomAcc, { promotion }) => {
-    const promotionEvents = promotion.reduce((promoAcc, { events }) => {
-      return [...promoAcc, ...events];
-    }, []);
-    return [...roomAcc, ...promotionEvents];
-  }, []);
-  // Add building name to each event
-  roomEvents.forEach((event) => {
-    event.building = building;
-    event.room = rooms[0].name;
-  });
-  return [...acc, ...roomEvents];
+	const roomEvents = rooms.reduce((roomAcc, { promotion }) => {
+		const promotionEvents = promotion.reduce((promoAcc, { events }) => {
+			return [...promoAcc, ...events];
+		}, []);
+		return [...roomAcc, ...promotionEvents];
+	}, []);
+	// Add building name to each event
+	roomEvents.forEach((event) => {
+		event.building = building;
+		event.room = rooms[0].name;
+	});
+	return [...acc, ...roomEvents];
 }, []);
 
 // Sort by date and time
 allEventsDay.sort((a, b) => {
-  const dateDiff = new Date(a.date) - new Date(b.date);
-  if (dateDiff !== 0) {
-    return dateDiff;
-  }
-  const timeA = moment(a.time, 'HH:mm');
-  const timeB = moment(b.time, 'HH:mm');
-  return timeA.isBefore(timeB) ? -1 : (timeA.isAfter(timeB) ? 1 : 0);
+	const dateDiff = new Date(a.date) - new Date(b.date);
+	if (dateDiff !== 0) {
+		return dateDiff;
+	}
+	const timeA = moment(a.time, "HH:mm");
+	const timeB = moment(b.time, "HH:mm");
+	return timeA.isBefore(timeB) ? -1 : timeA.isAfter(timeB) ? 1 : 0;
 });
 
 // Function to generate hours in a day
 const generateHours = (start, end) => {
-  let hours = [];
-  for(let i = start; i <= end; i++) {
-    hours.push(i + ":00");
-  }
-  return hours;
+	let hours = [];
+	for (let i = start; i <= end; i++) {
+		hours.push(i + ":00");
+	}
+	return hours;
 };
 
 // All day hours from 8:00 to 20:00
@@ -120,15 +120,15 @@ const ScheduleCalendar = () => {
 				nextWeek={nextWeek}
 			/>
 
-      {viewMode === "day" && (
-        <CalendarDay
-          dayDates={dayDates}
-          openRooms={openRooms}
-          setOpenRooms={setOpenRooms}
-          allEvents={allEventsDay}
-          key="day"
-        />
-      )}
+			{viewMode === "day" && (
+				<CalendarDay
+					dayDates={dayDates}
+					openRooms={openRooms}
+					setOpenRooms={setOpenRooms}
+					allEvents={allEventsDay}
+					key="day"
+				/>
+			)}
 
 			{viewMode === "week" && (
 				<CalendarWeek
