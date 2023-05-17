@@ -1,4 +1,4 @@
-import { Col, Grid, Text } from "@mantine/core";
+import { Col, Grid, Text, createStyles } from "@mantine/core";
 import moment from "moment";
 import React from "react";
 import { promotions } from "../../utils/data.utils";
@@ -6,6 +6,7 @@ import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import CustomEvent from "./CustomEvent";
 
 function SchedulerTable({ weekDates, openRooms, setOpenRooms, allEvents }) {
+	const { classes } = useStyle();
 	const openBuildings = Object.entries(openRooms)
 		.filter(([_, isOpen]) => isOpen)
 		.map(([building, _]) => building);
@@ -158,7 +159,8 @@ function SchedulerTable({ weekDates, openRooms, setOpenRooms, allEvents }) {
 											width: "10rem",
 											height: "5rem",
 											padding: 0,
-											overflow: "hidden",
+											overflowX: "hidden",
+											scrollbarWidth: "none",
 										}}
 									>
 										{allEvents
@@ -172,13 +174,15 @@ function SchedulerTable({ weekDates, openRooms, setOpenRooms, allEvents }) {
 												);
 											})
 											.map((data) => (
-												<CustomEvent
-													name={data.name}
-													color={data.color}
-													onClickEvent={handleClickEvent}
-													data={data}
-													key={data.name + data.time}
-												/>
+												<>
+													<CustomEvent
+														name={data.name}
+														color={data.color}
+														onClickEvent={handleClickEvent}
+														data={data}
+														key={data.name + data.time}
+													/>
+												</>
 											))}
 									</Col>
 									<Col
@@ -189,7 +193,8 @@ function SchedulerTable({ weekDates, openRooms, setOpenRooms, allEvents }) {
 											width: "10rem",
 											height: "5rem",
 											padding: 0,
-											overflow: "hidden",
+											overflowX: "hidden",
+											scrollbarWidth: "none",
 										}}
 									>
 										{allEvents
@@ -234,17 +239,7 @@ function SchedulerTable({ weekDates, openRooms, setOpenRooms, allEvents }) {
 
 								{weekDates.map((weekDate) => (
 									<React.Fragment key={weekDate}>
-										<Col
-											span={1}
-											style={{
-												borderBottom: "1px solid black",
-												borderRight: "1px solid black",
-												width: "10rem",
-												height: "5rem",
-												padding: 0,
-												overflow: "hidden",
-											}}
-										>
+										<Col span={1} className={classes.eventContainer}>
 											{promotion &&
 												promotion.map(({ events }) =>
 													events
@@ -268,17 +263,7 @@ function SchedulerTable({ weekDates, openRooms, setOpenRooms, allEvents }) {
 														))
 												)}
 										</Col>
-										<Col
-											span={1}
-											style={{
-												borderBottom: "1px solid black",
-												borderRight: "1px solid black",
-												width: "10rem",
-												height: "5rem",
-												padding: 0,
-												overflow: "hidden",
-											}}
-										>
+										<Col span={1} className={classes.eventContainer}>
 											{promotion &&
 												promotion.map(({ events }) =>
 													events
@@ -311,5 +296,17 @@ function SchedulerTable({ weekDates, openRooms, setOpenRooms, allEvents }) {
 		</Grid>
 	);
 }
+
+const useStyle = createStyles((theme) => ({
+	eventContainer: {
+		borderBottom: "1px solid black",
+		borderRight: "1px solid black",
+		width: "10rem",
+		height: "5rem",
+		padding: 0,
+		overflowX: "hidden",
+		scrollbarWidth: "none",
+	},
+}));
 
 export default SchedulerTable;
