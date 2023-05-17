@@ -5,7 +5,7 @@ import { getAllCampuses } from "../../store/mainslice";
 import { useSelector } from "react-redux";
 import { getDayDates, getWeekDates } from "../../utils/date.utils";
 import { promotions } from "../../utils/data.utils";
-import SchedulerTable from "./SchedulerTable";
+import CalendarWeek from "./CalendarWeek";
 import SchedulerHeader from "./SchedulerHeader";
 import CalendarDay from "./CalendarDay";
 import moment from "moment";
@@ -131,7 +131,7 @@ const ScheduleCalendar = () => {
       )}
 
 			{viewMode === "week" && (
-				<SchedulerTable
+				<CalendarWeek
 					weekDates={weekDates}
 					openRooms={openRooms}
 					setOpenRooms={setOpenRooms}
