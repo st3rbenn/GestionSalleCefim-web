@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import { BrowserRouter, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
 import App from "./App";
-import Scheduler from "./component/calendar/ScheduleTable";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Provider } from "react-redux";

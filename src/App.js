@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { Routes, Route, } from "react-router-dom";
 import { NavbarMinimal } from "./view/Dashboard";
@@ -12,21 +12,13 @@ import Scheduler from "./component/calendar/ScheduleTable";
 function App() {
 	const date = new Date(); // La date à partir de laquelle afficher la semaine
 	const promos = ["CDA", "Dev Web", "Design", "Marketing"]; // Remplacez par vos promotions
-
-	/* DEBUT DU CODE */
-
-	/* voir aussi src/store et src/services */
-
-	//UTILISATION DE REDUX POUR RECUPERER LES DONNEES DE LA BDD
-
-
-	/* FIN DU CODE */
-
 	return (
-		<Box style={{
-			display: "flex",
-			margin: "10px",
-		}}>
+		<Box
+			style={{
+				display: "flex",
+				margin: "10px",
+			}}
+		>
 			<NavbarMinimal />
 			<Routes>
 				<Route path="/" element={<Scheduler />} index />
@@ -39,7 +31,6 @@ function App() {
 	);
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 export default App;
