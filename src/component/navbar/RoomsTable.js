@@ -101,6 +101,7 @@ export function TableSort() {
     </>
   ));
 
+
   return (
     <ScrollArea>
       <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} sx={{ tableLayout: 'fixed' }}>

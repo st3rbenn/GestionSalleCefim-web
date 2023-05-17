@@ -76,7 +76,7 @@ export function NavbarMinimal() {
   return (
     <Navbar height={750} width={{ base: 80 }} p="md">
       <Center>
-        <img src="/img/icon_cefim_dashboard.png" alt="Logo" width={30} />
+        <img src="/img/icon_cefim_dashboard.png" alt="Logo" width={40} />
       </Center>
       <Navbar.Section grow mt={50}>
         <Stack justify="center" spacing={0}>

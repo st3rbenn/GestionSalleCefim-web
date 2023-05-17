@@ -35,7 +35,6 @@ export const getAllReservation = createAsyncThunk("root/reservation/all", async 
 
 export const getAllRoom = createAsyncThunk("root/room/all", async () => {
 	const res = await room.getAllRoom();
-	// console.log(res);
 	return res;
 })
 
@@ -47,7 +46,6 @@ export const getAllCourse = createAsyncThunk("root/course/all", async () => {
 
 export const deleteReservation = createAsyncThunk("root/reservation/delete", async (reservationId) => {
 	const res = await reservation.deleteReservation(reservationId);
-	// console.log('supprimer', res);
 	return reservationId;
 });
 
@@ -94,7 +92,6 @@ export const mainSlice = createSlice({
 			.addCase(getAllRoom.fulfilled, (state, action) => {
 				state.loadingRooms = false;
 				state.rooms = action.payload;
-				// console.log('hv', action.payload);
 			})
 			.addCase(getAllRoom.rejected, (state) => {
 				state.loadingRooms = false;

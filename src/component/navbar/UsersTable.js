@@ -64,6 +64,11 @@ export function UsersTable({ }) {
         </Anchor>
       </td>
       <td>
+        <Text align='center'>
+          {item.role}
+        </Text>
+      </td>
+      <td>
         <Group spacing={0} position="right">
           <ActionIcon>
             <IconPencil size="1rem" stroke={1.5}/>
@@ -85,8 +90,7 @@ export function UsersTable({ }) {
             <th>Nom</th>
             <th>Prénom</th>
             <th>Email</th>
-            {/* <th>Numéro</th> */}
-            {/* <th>Droits</th> */}
+            <th>Role</th>
             <th />
           </tr>
         </thead>

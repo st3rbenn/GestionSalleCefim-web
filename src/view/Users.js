@@ -1,6 +1,7 @@
 import React from 'react';
 import { UsersTable } from '../component/navbar/UsersTable';
-import { Box } from "@mantine/core";
+import { Box, Button } from "@mantine/core";
+import { RiAddLine } from 'react-icons/ri';
 
 
 const Users = () => {
@@ -11,7 +12,12 @@ const Users = () => {
       marginLeft: "30px",
       marginRight: "30px",
     }}>
-      <h1>Les formateurs</h1>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <h1>Les formateurs</h1>
+        <Button style={{ marginTop: "auto", marginBottom: "auto", width: "50px"}}>
+          <RiAddLine style={{ textAlign:"center",}}/>
+        </Button>
+      </div>
       <UsersTable />
     </Box>
   );

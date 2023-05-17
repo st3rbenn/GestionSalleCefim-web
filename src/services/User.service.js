@@ -5,17 +5,18 @@ class UserService {
   async getAllUsers() {
     try {
       const response = await axios.get('/user/all');
-      return  response.data;
+      return response.data;
     } catch (error) {
       console.log(error);
     }
   }
 
   /* POST */
-  async editUser(id, data) {
+  async addUser() {
     try {
-      const response = await axios.put(`/user/${id}`, data);
-      return response.data;
+      const response = await axios.post(`/user`, );
+      console.log('Utilisateur ajouté avec succès !');
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     }

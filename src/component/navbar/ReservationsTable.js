@@ -109,10 +109,10 @@ export function ReservationTable({ data }) {
                     </Group>
                 </td>
             </tr>
-            <CustomModal isOpen={isModalOpen} onClose={handleCloseModal} />
+            <CustomModal isOpen={isModalOpen} onClose={handleCloseModal} />            
         </>
     ));
-
+    
     return (
         <ScrollArea >
             <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} sx={{ tableLayout: 'fixed' }}>
