@@ -1,72 +1,101 @@
-import { useEffect, useState } from 'react';
-import { createStyles, Table, ScrollArea, UnstyledButton, Group, Text, Center, TextInput, rem, Menu, ActionIcon } from '@mantine/core';
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconEdit, IconTrash, IconDots } from '@tabler/icons-react';
-import { useAppThunkDispatch } from '../../store';
-import EditReservationModal from './CustomModal';
-import { useSelector } from 'react-redux';
-import { getAllRoom } from '../../store/mainslice';
+import { useEffect, useState } from "react";
+import {
+	createStyles,
+	Table,
+	ScrollArea,
+	UnstyledButton,
+	Group,
+	Text,
+	Center,
+	TextInput,
+	rem,
+	Menu,
+	ActionIcon,
+  Box,
+  Select,
+} from "@mantine/core";
+import {
+	IconSelector,
+	IconChevronDown,
+	IconChevronUp,
+	IconSearch,
+	IconEdit,
+	IconTrash,
+	IconDots,
+} from "@tabler/icons-react";
+import { useAppThunkDispatch } from "../../store";
+import EditReservationModal from "./CustomModal";
+import { useSelector } from "react-redux";
+import { getAllRoom } from "../../store/mainslice";
 
 const useStyles = createStyles((theme) => ({
-  th: {
-    padding: '0 !important',
-  },
-  control: {
-    width: '100%',
-    padding: `${theme.spacing.xs} ${theme.spacing.md}`,
+	th: {
+		padding: "0 !important",
+	},
+	control: {
+		width: "100%",
+		padding: `${theme.spacing.xs} ${theme.spacing.md}`,
 
-    '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-    },
-  },
-  icon: {
-    width: rem(21),
-    height: rem(21),
-    borderRadius: rem(21),
-  },
+		"&:hover": {
+			backgroundColor:
+				theme.colorScheme === "dark"
+					? theme.colors.dark[6]
+					: theme.colors.gray[0],
+		},
+	},
+	icon: {
+		width: rem(21),
+		height: rem(21),
+		borderRadius: rem(21),
+	},
 }));
 
 function Th({ children, reversed, sorted, onSort }) {
-  const { classes } = useStyles();
-  const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
-  return (
-    <th className={classes.th}>
-      <Group position="apart">
-        <Text fw={500} fz="sm">
-          {children}
-        </Text>
-        <Center className={classes.icon}>
-          <Icon size="0.9rem" stroke={1.5} />
-        </Center>
-      </Group>
-    </th>
-  );
+	const { classes } = useStyles();
+	const Icon = sorted
+		? reversed
+			? IconChevronUp
+			: IconChevronDown
+		: IconSelector;
+	return (
+		<th className={classes.th}>
+			<Group position="apart">
+				<Text fw={500} fz="sm">
+					{children}
+				</Text>
+				<Center className={classes.icon}>
+					<Icon size="0.9rem" stroke={1.5} />
+				</Center>
+			</Group>
+		</th>
+	);
 }
 
 export function TableSort() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleCloseModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
+	const handleCloseModal = () => {
+		setIsModalOpen(!isModalOpen);
+	};
 
-  const handleEditReservation = () => {
-    setIsModalOpen(true);
-    // Autres actions à effectuer lors de l'édition d'une réservation
-  };
-  const dispatch = useAppThunkDispatch();
-  const allRooms = useSelector((state) => state.rooms);
+	const handleEditReservation = () => {
+		setIsModalOpen(true);
+		// Autres actions à effectuer lors de l'édition d'une réservation
+	};
+	const dispatch = useAppThunkDispatch();
+	const allRooms = useSelector((state) => state.rooms);
 
-  const fetchRooms = async () => {
-    const response = await dispatch(getAllRoom());
+	const fetchRooms = async () => {
+		const response = await dispatch(getAllRoom());
 
-    if (response.meta.requestStatus === 'fulfilled') {
-      console.log('TEST', allRooms);
-    }
-  };
+		if (response.meta.requestStatus === "fulfilled") {
+			console.log("TEST", allRooms);
+		}
+	};
 
-  useEffect(() => {
-    fetchRooms();
-  }, []);
+	useEffect(() => {
+		fetchRooms();
+	}, []);
 
   const rows = allRooms.map((row) => (
     <>

@@ -1,23 +1,23 @@
-import { Table, Text, ScrollArea, useMantineTheme } from '@mantine/core';
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
-import { getAllCourse } from '../../store/mainslice';
+import { Table, Text, ScrollArea, useMantineTheme } from "@mantine/core";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { getAllCourse } from "../../store/mainslice";
 
 export function CoursesTable() {
-  const allCourses = useSelector((state) => state.courses);
-  const dispatch = useDispatch();
+	const allCourses = useSelector((state) => state.courses);
+	const dispatch = useDispatch();
 
-  const fetchCourses = async () => {
-    const response = await dispatch(getAllCourse());
+	const fetchCourses = async () => {
+		const response = await dispatch(getAllCourse());
 
-    if (response.meta.requestStatus === "fulfilled") {
-      console.log(allCourses);
-    }
-  }
+		if (response.meta.requestStatus === "fulfilled") {
+			console.log(allCourses);
+		}
+	};
 
-  useEffect(() => {
-    fetchCourses();
-  }, [])
+	useEffect(() => {
+		fetchCourses();
+	}, []);
 
 
   const rows = allCourses && allCourses.map((row) => (
@@ -37,22 +37,20 @@ export function CoursesTable() {
     </tr>
   ));
 
-  return (
-    <ScrollArea>
-      <Table sx={{ width: "100%" }} verticalSpacing="sm">
-        <thead>
-          <tr>
-            <th>Titre</th>
-            <th>Début</th>
-            <th>Fin</th>
-            <th>Nombre d'étudiants</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </Table>
-    </ScrollArea>
-  );
+	return (
+		<ScrollArea>
+			<Table sx={{ width: "100%" }} verticalSpacing="sm">
+				<thead>
+					<tr>
+						<th>Titre</th>
+						<th>Début</th>
+						<th>Fin</th>
+						<th>Nombre d'étudiants</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>{rows}</tbody>
+			</Table>
+		</ScrollArea>
+	);
 }
-
-

@@ -1,54 +1,78 @@
-import { useEffect, useMemo, useState } from 'react';
-import { createStyles, Table, ScrollArea, Group, Text, Center, rem, Menu, ActionIcon, } from '@mantine/core';
-import { IconSelector, IconChevronDown, IconChevronUp, IconTrash, IconDots, IconEdit } from '@tabler/icons-react';
-import EditReservationModal from './CustomModal';
-import { useAppThunkDispatch } from '../../store';
-import { useSelector } from 'react-redux';
-import { deleteReservation, getAllReservation } from '../../store/mainslice';
-import CustomModal from './CustomModal';
-
+import { useEffect, useState } from "react";
+import {
+	createStyles,
+	Table,
+	ScrollArea,
+	Group,
+	Text,
+	Center,
+	rem,
+	Menu,
+	ActionIcon,
+  Box,
+  Select,
+} from "@mantine/core";
+import {
+	IconSelector,
+	IconChevronDown,
+	IconChevronUp,
+	IconTrash,
+	IconDots,
+	IconEdit,
+} from "@tabler/icons-react";
+import EditReservationModal from "./CustomModal";
+import { useAppThunkDispatch } from "../../store";
+import { useSelector } from "react-redux";
+import { deleteReservation, getAllReservation } from "../../store/mainslice";
+import CustomModal from "./CustomModal";
 
 const useStyles = createStyles((theme) => ({
+	th: {
+		padding: "0 !important",
+	},
 
-    th: {
-        padding: '0 !important',
-    },
+	control: {
+		width: "100%",
+		padding: `${theme.spacing.xs} ${theme.spacing.md}`,
 
-    control: {
-        width: '100%',
-        padding: `${theme.spacing.xs} ${theme.spacing.md}`,
+		"&:hover": {
+			backgroundColor:
+				theme.colorScheme === "dark"
+					? theme.colors.dark[6]
+					: theme.colors.gray[0],
+		},
+	},
 
-        '&:hover': {
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-        },
-    },
-
-    icon: {
-        width: rem(21),
-        height: rem(21),
-        borderRadius: rem(21),
-    },
+	icon: {
+		width: rem(21),
+		height: rem(21),
+		borderRadius: rem(21),
+	},
 }));
 
 function Th({ children, reversed, sorted }) {
-    const { classes } = useStyles();
-    const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
-    return (
-        <th className={classes.th}>
-            <Group position="apart">
-                <Text fw={500} fz="sm">
-                    {children}
-                </Text>
-                <Center className={classes.icon}>
-                    <Icon size="0.9rem" stroke={1.5} />
-                </Center>
-            </Group>
-        </th>
-    );
+	const { classes } = useStyles();
+	const Icon = sorted
+		? reversed
+			? IconChevronUp
+			: IconChevronDown
+		: IconSelector;
+	return (
+		<th className={classes.th}>
+			<Group position="apart">
+				<Text fw={500} fz="sm">
+					{children}
+				</Text>
+				<Center className={classes.icon}>
+					<Icon size="0.9rem" stroke={1.5} />
+				</Center>
+			</Group>
+		</th>
+	);
 }
 
 export function ReservationTable({ data }) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
     const allReservations = useSelector((state) => state.reservations);
     const loadingReservation = useSelector((state) => state.loadingReservations)
@@ -62,10 +86,10 @@ export function ReservationTable({ data }) {
     };
     const dispatch = useAppThunkDispatch();
 
-    const handleEditReservation = () => {
-        setIsModalOpen(true);
-        // Autres actions à effectuer lors de l'édition d'une réservation
-    };
+	const handleEditReservation = () => {
+		setIsModalOpen(true);
+		// Autres actions à effectuer lors de l'édition d'une réservation
+	};
 
     const handleDelete = async (reservationId) => {
         const response = await dispatch(deleteReservation(reservationId));
@@ -78,14 +102,14 @@ export function ReservationTable({ data }) {
     const fetchReservations = async () => {
         const response = await dispatch(getAllReservation());
 
-        if (response.meta.requestStatus === "fulfilled") {
-            // console.log(allReservations);
-        }
-    }
+		if (response.meta.requestStatus === "fulfilled") {
+			// console.log(allReservations);
+		}
+	};
 
-    useEffect(() => {
-        fetchReservations();
-    }, [])
+	useEffect(() => {
+		fetchReservations();
+	}, []);
 
     const rows = allReservations.map((row) => (
         <>
@@ -147,4 +171,3 @@ export function ReservationTable({ data }) {
         </ScrollArea>
     );
 }
-
