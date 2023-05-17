@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Routes, Route, } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { NavbarMinimal } from "./view/Dashboard";
 import Reservations from "./view/Reservations";
 import Rooms from "./view/Rooms";
 import Trainers from "./view/Users";
 import Courses from "./view/Courses";
 import { Box } from "@mantine/core";
-import Scheduler from "./component/calendar/ScheduleTable";
+import Scheduler from "./component/calendar/SchedulerCalendar";
 
 function App() {
 	const date = new Date(); // La date à partir de laquelle afficher la semaine
@@ -16,7 +16,6 @@ function App() {
 		<Box
 			style={{
 				display: "flex",
-				margin: "10px",
 			}}
 		>
 			<NavbarMinimal />

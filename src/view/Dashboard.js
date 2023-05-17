@@ -74,7 +74,7 @@ export function NavbarMinimal() {
   ));
 
   return (
-    <Navbar height={750} width={{ base: 80 }} p="md">
+    <Navbar height="100vh" width={{ base: 80 }} p="md">
       <Center>
         <img src="/img/icon_cefim_dashboard.png" alt="Logo" width={30} />
       </Center>
