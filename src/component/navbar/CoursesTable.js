@@ -11,7 +11,7 @@ export function CoursesTable() {
     const response = await dispatch(getAllCourse());
 
     if (response.meta.requestStatus === "fulfilled") {
-      console.log('Ptit con va ', allCourses);
+      console.log(allCourses);
     }
   }
 

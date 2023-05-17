@@ -11,7 +11,7 @@ const Users = () => {
       marginLeft: "30px",
       marginRight: "30px",
     }}>
-      <h1>Les utilisateurs</h1>
+      <h1>Les formateurs</h1>
       <UsersTable />
     </Box>
   );
