@@ -1,10 +1,9 @@
 import React from 'react';
-import { UsersTable } from '../component/navbar/TrainersTable';
-import data from '../data/UsersData';
+import { UsersTable } from '../component/navbar/UsersTable';
 import { Box } from "@mantine/core";
 
 
-const Trainers = () => {
+const Users = () => {
   // Supposons que vous ayez les données des formateurs dans un tableau appelé "trainersData"
 
   return (
@@ -13,9 +12,9 @@ const Trainers = () => {
       marginRight: "30px",
     }}>
       <h1>Les formateurs</h1>
-      <UsersTable data={data} />
+      <UsersTable />
     </Box>
   );
 };
 
-export default Trainers;
+export default Users;

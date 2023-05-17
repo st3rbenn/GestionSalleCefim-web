@@ -5,7 +5,7 @@ class UserService {
   async getAllUsers() {
     try {
       const response = await axios.get('/user/all');
-      return response.data;
+      return  response.data;
     } catch (error) {
       console.log(error);
     }
