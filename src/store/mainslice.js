@@ -80,8 +80,8 @@ export const mainSlice = createSlice({
 				state.loadingReservations = true;
 			})
 			.addCase(getAllReservation.fulfilled, (state, action) => {
-				state.reservations = action.payload;
 				state.loadingReservations = false;
+				state.reservations = action.payload;
 			})
 			.addCase(getAllReservation.rejected, (state) => {
 				state.loadingReservations = false;
@@ -111,8 +111,6 @@ export const mainSlice = createSlice({
 				state.loadingReservations = true;
 			})
 			.addCase(deleteReservation.fulfilled, (state, action) => {
-				const deletedReservationId = action.payload;
-				state.reservations = state.reservations.filter((reservation) => reservation.id !== deletedReservationId);
 				state.loadingReservations = false;
 			})
 			.addCase(deleteReservation.rejected, (state) => {

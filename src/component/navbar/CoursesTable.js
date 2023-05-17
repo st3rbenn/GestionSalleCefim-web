@@ -19,10 +19,8 @@ export function CoursesTable() {
     fetchCourses();
   }, [])
 
-  const [sortedData] = useState(allCourses);
-  const theme = useMantineTheme();
 
-  const rows = sortedData && sortedData.map((row) => (
+  const rows = allCourses && allCourses.map((row) => (
     <tr key={row.name}>
       <td>
         <Text>{row.name}</Text>

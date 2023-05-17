@@ -68,9 +68,7 @@ export function TableSort() {
     fetchRooms();
   }, []);
 
-  const [sortedData] = useState(allRooms);
-
-  const rows = sortedData.map((row) => (
+  const rows = allRooms.map((row) => (
     <>
       <tr key={row.name}>
         <td>{row.location}</td>

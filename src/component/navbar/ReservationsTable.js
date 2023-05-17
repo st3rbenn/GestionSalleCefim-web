@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { createStyles, Table, ScrollArea, Group, Text, Center, rem, Menu, ActionIcon, } from '@mantine/core';
 import { IconSelector, IconChevronDown, IconChevronUp, IconTrash, IconDots, IconEdit } from '@tabler/icons-react';
 import EditReservationModal from './CustomModal';
@@ -50,6 +50,13 @@ function Th({ children, reversed, sorted }) {
 export function ReservationTable({ data }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const allReservations = useSelector((state) => state.reservations);
+    const loadingReservation = useSelector((state) => state.loadingReservations)
+
+    useEffect(() => {
+        console.log("reservations", allReservations);
+    }, [loadingReservation])
+
     const handleCloseModal = () => {
         setIsModalOpen(!isModalOpen);
     };
@@ -63,9 +70,10 @@ export function ReservationTable({ data }) {
     const handleDelete = async (reservationId) => {
         const response = await dispatch(deleteReservation(reservationId));
         console.log('delete est passée');
+        if (response.meta.requestStatus === "fulfilled") {
+            await dispatch(getAllReservation());
+        }
     };
-
-    const allReservations = useSelector((state) => state.reservations);
 
     const fetchReservations = async () => {
         const response = await dispatch(getAllReservation());
@@ -79,9 +87,7 @@ export function ReservationTable({ data }) {
         fetchReservations();
     }, [])
 
-    const [sortedData] = useState(allReservations);
-
-    const rows = sortedData.map((row) => (
+    const rows = allReservations.map((row) => (
         <>
             <tr key={row.name}>
                 <td>{row.title}</td>
