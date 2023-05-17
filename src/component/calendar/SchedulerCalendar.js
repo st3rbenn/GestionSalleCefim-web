@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Paper } from "@mantine/core";
+import { Table, Button, Col, Grid, Paper, Flex, Text } from "@mantine/core";
 import { useAppThunkDispatch } from "../../store";
 import { getAllCampuses } from "../../store/mainslice";
 import { useSelector } from "react-redux";
 import { getDayDates, getWeekDates } from "../../utils/date.utils";
 import { promotions } from "../../utils/data.utils";
-import SchedulerTable from "./SchedulerTable";
+import CalendarWeek from "./CalendarWeek";
 import SchedulerHeader from "./SchedulerHeader";
+import CalendarDay from "./CalendarDay";
+import moment from "moment";
 
 // À l'extérieur de votre composant de rendu, préparez les données :
-const allEvents = promotions.reduce((acc, { rooms, building }) => {
+const allEventsWeek = promotions.reduce((acc, { rooms, building }) => {
 	const roomEvents = rooms.reduce((roomAcc, { promotion }) => {
 		const promotionEvents = promotion.reduce((promoAcc, { events }) => {
 			return [...promoAcc, ...events];
@@ -24,12 +26,50 @@ const allEvents = promotions.reduce((acc, { rooms, building }) => {
 }, []);
 
 // Trier par date et moment de la journée (Matin vient avant Après-midi)
-allEvents.sort((a, b) => {
+allEventsWeek.sort((a, b) => {
 	if (a.date === b.date) {
 		return a.time === "Matin" ? -1 : 1;
 	}
 	return new Date(a.date) - new Date(b.date);
 });
+
+const allEventsDay = promotions.reduce((acc, { rooms, building }) => {
+  const roomEvents = rooms.reduce((roomAcc, { promotion }) => {
+    const promotionEvents = promotion.reduce((promoAcc, { events }) => {
+      return [...promoAcc, ...events];
+    }, []);
+    return [...roomAcc, ...promotionEvents];
+  }, []);
+  // Add building name to each event
+  roomEvents.forEach((event) => {
+    event.building = building;
+    event.room = rooms[0].name;
+  });
+  return [...acc, ...roomEvents];
+}, []);
+
+// Sort by date and time
+allEventsDay.sort((a, b) => {
+  const dateDiff = new Date(a.date) - new Date(b.date);
+  if (dateDiff !== 0) {
+    return dateDiff;
+  }
+  const timeA = moment(a.time, 'HH:mm');
+  const timeB = moment(b.time, 'HH:mm');
+  return timeA.isBefore(timeB) ? -1 : (timeA.isAfter(timeB) ? 1 : 0);
+});
+
+// Function to generate hours in a day
+const generateHours = (start, end) => {
+  let hours = [];
+  for(let i = start; i <= end; i++) {
+    hours.push(i + ":00");
+  }
+  return hours;
+};
+
+// All day hours from 8:00 to 20:00
+const dayHours = generateHours(8, 20);
 
 const ScheduleCalendar = () => {
 	const [currentWeek, setCurrentWeek] = useState(0);
@@ -80,131 +120,22 @@ const ScheduleCalendar = () => {
 				nextWeek={nextWeek}
 			/>
 
-			{/* {viewMode === "day" && (
-				<Grid
-					gutter="xs"
-					style={{
-						borderTop: "1px solid black",
-						borderLeft: "1px solid black",
-					}}
-				>
-					<Col
-						span={2}
-						style={{
-							borderBottom: "1px solid black",
-							borderRight: "1px solid black",
-						}}
-					>
-						<Paper padding="xs" shadow="xs" style={{ textAlign: "center" }}>
-							{dayDates}
-						</Paper>
-					</Col>
-					{Array.from({ length: 10 }, (_, i) => i + 8).map((hour) => (
-						<Col
-							span={2}
-							style={{
-								borderBottom: "1px solid black",
-								borderRight: "1px solid black",
-								width: "10%",
-								fontSize: "0.6rem",
-								padding: 0,
-							}}
-							key={hour}
-						>
-							<Paper padding="xs" shadow="xs" style={{ textAlign: "center" }}>
-								{hour}:00 - {hour + 1}:00
-							</Paper>
-						</Col>
-					))}
-					{promotions.map(({ room, promo }) => (
-						<>
-							<Col
-								span={2}
-								style={{
-									borderBottom: "1px solid black",
-									borderRight: "1px solid black",
-									cursor: "pointer",
-								}}
-								onClick={() =>
-									setOpenRooms((prev) => ({ ...prev, [room]: !prev[room] }))
-								}
-							>
-								<Paper padding="xs" shadow="xs">
-									{room}
-								</Paper>
-							</Col>
-							{weekDates.map(() => (
-								<>
-									<Col
-										span={1}
-										style={{
-											borderBottom: "1px solid black",
-											borderRight: "1px solid black",
-											width: "10rem",
-											height: "5rem",
-										}}
-									/>
-									<Col
-										span={1}
-										style={{
-											borderBottom: "1px solid black",
-											borderRight: "1px solid black",
-											width: "10rem",
-											height: "5rem",
-										}}
-									/>
-								</>
-							))}
-							{openRooms[room] &&
-								promo.map(({ name }) => (
-									<>
-										<Col
-											span={2}
-											style={{
-												borderBottom: "1px solid black",
-												borderRight: "1px solid black",
-												paddingLeft: "2rem",
-											}}
-										>
-											<Paper padding="xs" shadow="xs">
-												{name}
-											</Paper>
-										</Col>
-										{weekDates.map(() => (
-											<>
-												<Col
-													span={1}
-													style={{
-														borderBottom: "1px solid black",
-														borderRight: "1px solid black",
-														width: "10rem",
-														height: "5rem",
-													}}
-												/>
-												<Col
-													span={1}
-													style={{
-														borderBottom: "1px solid black",
-														borderRight: "1px solid black",
-														width: "10rem",
-														height: "5rem",
-													}}
-												/>
-											</>
-										))}
-									</>
-								))}
-						</>
-					))}
-				</Grid>
-			)} */}
+      {viewMode === "day" && (
+        <CalendarDay
+          dayDates={dayDates}
+          openRooms={openRooms}
+          setOpenRooms={setOpenRooms}
+          allEvents={allEventsDay}
+          key="day"
+        />
+      )}
 
 			{viewMode === "week" && (
-				<SchedulerTable
+				<CalendarWeek
 					weekDates={weekDates}
 					openRooms={openRooms}
 					setOpenRooms={setOpenRooms}
-					allEvents={allEvents}
+					allEvents={allEventsWeek}
 					key="week"
 				/>
 			)}
