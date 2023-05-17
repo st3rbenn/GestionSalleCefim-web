@@ -136,7 +136,8 @@ const CalendarDay = ({ allEvents, openRooms, setOpenRooms, dayDates }) => {
 									width: "10rem",
 									height: "5rem",
 									padding: 0,
-									overflow: "hidden",
+                  overflowX: "hidden",
+                  scrollbarWidth: "none",
 								}}
 							>
 								{!openBuildings.includes(building) && (
@@ -194,7 +195,8 @@ const CalendarDay = ({ allEvents, openRooms, setOpenRooms, dayDates }) => {
 											width: "10rem",
 											height: "5rem",
 											padding: 0,
-											overflow: "hidden",
+											overflowX: "hidden",
+											scrollbarWidth: "none",
 										}}
 									>
 										{promotion &&
@@ -224,60 +226,6 @@ const CalendarDay = ({ allEvents, openRooms, setOpenRooms, dayDates }) => {
 								))}
 							</React.Fragment>
 						))}
-
-					{/* {openBuildings.includes(building) &&
-						rooms.map(({ name, promotion }) => (
-							<React.Fragment key={name + promotion}>
-								<Col
-									span={2}
-									style={{
-										borderBottom: "1px solid black",
-										borderRight: "1px solid black",
-										paddingLeft: "2rem",
-									}}
-									key={name}
-								>
-									<Text>{name + " :"}</Text>
-								</Col>
-
-								{hours.map((hour) => (
-									<Col
-										key={hour}
-										span={1}
-										style={{
-											borderBottom: "1px solid black",
-											borderRight: "1px solid black",
-											width: "10rem",
-											height: "5rem",
-											padding: 0,
-											overflow: "hidden",
-										}}
-									>
-										{promotion &&
-											promotion
-												.filter((event) => {
-													const date1 = moment(event.date, "YYYY-MM-DD");
-													const date2 = moment(dayDates, "DD/MM/YYYY");
-													const isSameHour = event.hour === hour + "h00";
-													return (
-														date1.isSame(date2, "day") &&
-														isSameHour &&
-														event.building === building
-													);
-												})
-												.map((event) => (
-													<CustomEvent
-														key={event.name + event.time + event.hour}
-														name={event.name}
-														color={event.color}
-														onClickEvent={handleClickEvent}
-														data={event}
-													/>
-												))}
-									</Col>
-								))}
-							</React.Fragment>
-						))} */}
 				</React.Fragment>
 			))}
 		</Grid>
