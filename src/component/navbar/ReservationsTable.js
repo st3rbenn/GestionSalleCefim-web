@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { createStyles, Table, ScrollArea, Group, Text, Center, rem, Menu, ActionIcon, } from '@mantine/core';
 import { IconSelector, IconChevronDown, IconChevronUp, IconTrash, IconDots, IconEdit } from '@tabler/icons-react';
-import EditReservationModal from './ReservationsModal';
+import EditReservationModal from './CustomModal';
 import { useAppThunkDispatch } from '../../store';
 import { useSelector } from 'react-redux';
 import { deleteReservation, getAllReservation } from '../../store/mainslice';
+import CustomModal from './CustomModal';
 
 
 const useStyles = createStyles((theme) => ({
@@ -70,7 +71,7 @@ export function ReservationTable({ data }) {
         const response = await dispatch(getAllReservation());
 
         if (response.meta.requestStatus === "fulfilled") {
-            console.log(allReservations);
+            // console.log(allReservations);
         }
     }
 
@@ -108,7 +109,7 @@ export function ReservationTable({ data }) {
                     </Group>
                 </td>
             </tr>
-            <EditReservationModal isOpen={isModalOpen} onClose={handleCloseModal} />
+            <CustomModal isOpen={isModalOpen} onClose={handleCloseModal} />
         </>
     ));
 

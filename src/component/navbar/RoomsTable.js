@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { createStyles, Table, ScrollArea, UnstyledButton, Group, Text, Center, TextInput, rem, Menu, ActionIcon } from '@mantine/core';
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconEdit, IconTrash, IconDots } from '@tabler/icons-react';
 import { useAppThunkDispatch } from '../../store';
-import EditReservationModal from './ReservationsModal';
+import EditReservationModal from './CustomModal';
 import { useSelector } from 'react-redux';
 import { getAllRoom } from '../../store/mainslice';
 

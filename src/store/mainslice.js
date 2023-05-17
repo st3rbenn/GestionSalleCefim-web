@@ -47,7 +47,7 @@ export const getAllCourse = createAsyncThunk("root/course/all", async () => {
 
 export const deleteReservation = createAsyncThunk("root/reservation/delete", async (reservationId) => {
 	const res = await reservation.deleteReservation(reservationId);
-	console.log('supprimer', res);
+	// console.log('supprimer', res);
 	return reservationId;
 });
 

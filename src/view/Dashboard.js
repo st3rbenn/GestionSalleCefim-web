@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Navbar, Center, Stack } from '@mantine/core';
 import { IconHome2, IconLogout, IconSwitchHorizontal, } from '@tabler/icons-react';
 import { MantineLogo } from '@mantine/ds';
-import { MdMeetingRoom } from 'react-icons/md';
+import { MdMeetingRoom, MdSchool } from 'react-icons/md';
 import { RiCalendarEventLine } from 'react-icons/ri';
 import { MdPerson } from 'react-icons/md';
 import NavbarLink from '../component/navbar/NavbarLink';
@@ -14,6 +14,7 @@ const mockdata = [
   { icon: MdPerson, label: 'Formateurs', path: '/admin/formateurs' },
   { icon: MdMeetingRoom, label: 'Salles', path: '/admin/salles' },
   { icon: RiCalendarEventLine, label: 'Reservations', path: '/admin/reservations' },
+  { icon: MdSchool, label: 'Formations', path: '/admin/formations' },
 ];
 
 export function NavbarMinimal() {

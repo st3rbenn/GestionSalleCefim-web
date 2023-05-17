@@ -1,7 +1,7 @@
 import { Modal, Box, Select } from '@mantine/core';
 
 
-function EditReservationModal({ isOpen, onClose }) {
+function CustomModal({ isOpen, onClose }) {
 
   return (
     <>
@@ -41,5 +41,5 @@ function EditReservationModal({ isOpen, onClose }) {
 
 
 
-export default EditReservationModal;
+export default CustomModal;
 
