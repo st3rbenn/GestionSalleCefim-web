@@ -1,7 +1,6 @@
-import { Col, Grid, Paper, Text } from "@mantine/core";
+import { Col, Grid, Text } from "@mantine/core";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
-import { getWeekDates } from "../../utils/date.utils";
+import React from "react";
 import { promotions } from "../../utils/data.utils";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import CustomEvent from "./CustomEvent";
@@ -11,22 +10,10 @@ function SchedulerTable({ weekDates, openRooms, setOpenRooms, allEvents }) {
 		.filter(([_, isOpen]) => isOpen)
 		.map(([building, _]) => building);
 
-	const displayEvents = (date, time) => {
-		return allEvents.filter((event) => {
-			const date1 = moment(event.date, "YYYY-MM-DD");
-			const date2 = moment(date, "DD/MM/YYYY");
-			return date1.isSame(date2, "day") && event.time === time;
-		});
-	};
-
 	const handleClickEvent = (data) => {
 		// console.log the current event name
 		console.log(data);
 	};
-
-	useEffect(() => {
-		console.log(allEvents);
-	}, [allEvents]);
 
 	return (
 		<Grid
@@ -69,7 +56,7 @@ function SchedulerTable({ weekDates, openRooms, setOpenRooms, allEvents }) {
 					padding: 0,
 				}}
 			></Col>
-      
+
 			{weekDates.map((weekDate, _) => (
 				<React.Fragment key={_}>
 					<Col
@@ -99,7 +86,7 @@ function SchedulerTable({ weekDates, openRooms, setOpenRooms, allEvents }) {
 				</React.Fragment>
 			))}
 
-      {/* SHOW ALL BUILDING AVAILABALE */}
+			{/* SHOW ALL BUILDING AVAILABALE */}
 			{promotions.map(({ building, rooms }) => (
 				<React.Fragment key={building + rooms}>
 					<Col
@@ -244,6 +231,7 @@ function SchedulerTable({ weekDates, openRooms, setOpenRooms, allEvents }) {
 								>
 									{name + " :"}
 								</Col>
+
 								{weekDates.map((weekDate) => (
 									<React.Fragment key={weekDate}>
 										<Col
